@@ -1,6 +1,6 @@
-# better-community
+# client
 
-> better-community frontend code
+> A Vue.js project
 
 ## Build Setup
 

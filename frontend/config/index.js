@@ -1,3 +1,11 @@
+/*
+ * @Description: 
+ * @Author: l
+ * @Date: 2021-05-31 13:38:16
+ * @LastEditors: l
+ * @LastEditTime: 2021-11-08 09:24:22
+ * @FilePath: \frontend\config\index.js
+ */
 'use strict'
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
@@ -10,10 +18,23 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
-
+    proxyTable: {
+      '/api': {
+        target: 'http://127.0.0.1:5000', //mine
+        // target:'http://10.28.247.102:5000',  local
+        // target:'http://10.28.247.102:5000', //cck
+        // target:'http://192.168.43.188:5000',
+        // target:'http://10.28.198.140:5000', //llm
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
+    // host: '10.128.208.213',
+    // host:'192.168.43.150',
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
@@ -72,5 +93,7 @@ module.exports = {
     // `npm run build --report`
     // Set to `true` or `false` to always turn it on or off
     bundleAnalyzerReport: process.env.npm_config_report
-  }
+  },
+
+ 
 }

@@ -1,3 +1,11 @@
+/*
+ * @Description: 
+ * @Author: l
+ * @Date: 2021-05-31 13:38:16
+ * @LastEditors: l
+ * @LastEditTime: 2021-05-31 22:24:48
+ * @FilePath: \client\build\webpack.base.conf.js
+ */
 'use strict'
 const path = require('path')
 const utils = require('./utils')
@@ -40,7 +48,7 @@ module.exports = {
   },
   module: {
     rules: [
-      ...(config.dev.useEslint ? [createLintingRule()] : []),
+      // ...(config.dev.useEslint ? [createLintingRule()] : []),
       {
         test: /\.vue$/,
         loader: 'vue-loader',
