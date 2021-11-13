@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-05-31 13:38:16
  * @LastEditors: l
- * @LastEditTime: 2021-11-08 21:38:40
+ * @LastEditTime: 2021-11-13 14:46:43
  * @FilePath: \frontend\src\App.vue
 -->
 <template>
@@ -20,7 +20,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+@import "./assets/css/main.css";
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   text-align: center;

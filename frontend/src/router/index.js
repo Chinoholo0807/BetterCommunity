@@ -3,14 +3,19 @@
  * @Author: l
  * @Date: 2021-11-07 23:25:09
  * @LastEditors: l
- * @LastEditTime: 2021-11-08 21:54:50
+ * @LastEditTime: 2021-11-11 18:38:28
  * @FilePath: \frontend\src\router\index.js
  */
 
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/pages/Login'
-import DashBoard from '@/pages/DashBoard'
+import Home from '@/pages/Home'
+import Dashboard from '@/pages/Dashboard'
+import AllHandout from '@/pages/AllHandout'
+import MyHandout from '@/pages/MyHandout'
+import MyRecv from '@/pages/MyRecv'
+import Register from '@/pages/Register'
 Vue.use(Router) // 让Vue安装VueRouter组件
 
 //指定路由
@@ -22,20 +27,40 @@ const router = new Router({
     },
     {
       path: '/login',
-      name: 'login',
       component: Login,
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: DashBoard,
+      path: '/register',
+      component: Register,
+    },
+    {
+      path: '/home',
+      component: Home,
+      redirect: '/dashboard',
+      children:[{
+        path: '/dashboard',
+        name: 'dashboard',
+        component: Dashboard,
+      },{
+        path: '/myhandout',
+        name: 'myhandout',
+        component: MyHandout,
+      },{
+        path: '/allhandout',
+        name: 'allhandout',
+        component: AllHandout
+      },{
+        path :'/myrecv',
+        name: 'myrecv',
+        component: MyRecv,
+      }]
     }
   ]
 })
 
 // 挂载路由导航守卫，防止直接页面跳转
 router.beforeEach((to,from,next)=>{
-  if(to.path == '/login')
+  if(to.path == '/login' || to.path == '/register')
     return next()
   // 获取token
   const tokenStr = window.sessionStorage.getItem('token')  
