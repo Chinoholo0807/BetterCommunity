@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-11 18:32:59
  * @LastEditors: l
- * @LastEditTime: 2021-11-13 14:31:37
+ * @LastEditTime: 2021-11-13 20:21:50
  * @FilePath: \frontend\src\pages\Register.vue
 -->
 <template>

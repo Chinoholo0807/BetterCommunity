@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-11 17:00:10
  * @LastEditors: l
- * @LastEditTime: 2021-11-13 17:42:30
+ * @LastEditTime: 2021-11-13 20:17:42
  * @FilePath: \frontend\src\pages\Dashboard.vue
 -->
 <template>
@@ -128,27 +128,31 @@
             <el-input type="textarea" rows=3 readonly v-model="userInfo.introduction" placeholder="">
             </el-input>
           </el-descriptions-item>
+
         </el-descriptions>
       </el-col>
     </el-row>
+    <update-user-dialog v-if="dialogOpen" ref="updateUserDialogRef" />
   </div>
 </template>
 
 <script>
 import { defineComponent } from "@vue/composition-api";
-
+import UpdateUserDialog from '@/pages/UpdateUserDialog' 
 export default defineComponent({
+  components: { UpdateUserDialog },
   created() {
     this.getUserInfo();
   },
   data() {
     return {
       userInfo: {},
+      dialogOpen :false,
     };
   },
   methods: {
     async getUserInfo() {
-      console.log("getUserInfo");
+      console.log("getUserInfo...");
       const result = await this.$http.get("user/info");
       // console.log(result.data)
       if (result.data.status.code == 200) {
@@ -162,8 +166,11 @@ export default defineComponent({
       }
     },
     updateUserInfo(){
-        console.log('udpateUserInfo ...')
-        this.$router.push('/myrecv')
+        this.dialogOpen = true
+        this.userInfo.password = ''
+        this.$nextTick(()=>{
+            this.$refs.updateUserDialogRef.init(this.userInfo)
+        })
     }
   },
   computed: {

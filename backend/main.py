@@ -66,6 +66,21 @@ def handler_get_user_info():
         'updateTime': 1636784940
     })
 
-
+@app.route('/user/update', methods=['POST'])
+def deal_user_info_update():
+    params = request.get_json(force=True)
+    print(request.path, " : ", params)
+    if 'phoneNum' in params.keys() and params['phoneNum'] == '18750946948':
+        return jsonify({'status': {
+            'code': 200,
+            'msg': 'Update success'
+        },
+        })
+    else:
+        return jsonify({'status': {
+            'code': 500,
+            'msg': 'Update failed'
+        }})
+    
 if __name__ == '__main__':
     app.run(port=5000)
