@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-07 23:25:09
  * @LastEditors: l
- * @LastEditTime: 2021-11-11 18:38:28
+ * @LastEditTime: 2021-11-13 20:55:09
  * @FilePath: \frontend\src\router\index.js
  */
 
@@ -13,7 +13,7 @@ import Login from '@/pages/Login'
 import Home from '@/pages/Home'
 import Dashboard from '@/pages/Dashboard'
 import AllHandout from '@/pages/AllHandout'
-import MyHandout from '@/pages/MyHandout'
+import MyIssue from '@/pages/MyIssue'
 import MyRecv from '@/pages/MyRecv'
 import Register from '@/pages/Register'
 Vue.use(Router) // 让Vue安装VueRouter组件
@@ -42,9 +42,9 @@ const router = new Router({
         name: 'dashboard',
         component: Dashboard,
       },{
-        path: '/myhandout',
-        name: 'myhandout',
-        component: MyHandout,
+        path: '/myissue',
+        name: 'myissue',
+        component: MyIssue,
       },{
         path: '/allhandout',
         name: 'allhandout',

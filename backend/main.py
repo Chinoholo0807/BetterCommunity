@@ -45,7 +45,7 @@ def deal_register():
         }})
 
 
-@app.route('/user/info', methods=['POST','GET'])
+@app.route('/user/info', methods=['POST', 'GET'])
 def handler_get_user_info():
     # params = request.get_json(force=True)
     print(request.path, " : ")
@@ -66,6 +66,7 @@ def handler_get_user_info():
         'updateTime': 1636784940
     })
 
+
 @app.route('/user/update', methods=['POST'])
 def deal_user_info_update():
     params = request.get_json(force=True)
@@ -81,6 +82,118 @@ def deal_user_info_update():
             'code': 500,
             'msg': 'Update failed'
         }})
-    
+
+
+@app.route('/req/mine', methods=['GET'])
+def deal_req_mine():
+    # params = request.get_json(force=True)
+    print(request.path, " : ",request.args)
+    return jsonify({'status': {
+        'code': 200,
+        'msg': 'OK'
+    },
+        'issues': [
+            {'id': 111111,
+             'name': '海物1111',
+             'username': 'haiwu1',
+             'type': 0,
+             'title': 'test1',
+             'description': 'description1..................................',
+             'headcount': 1,
+             'createTime': 1636784940,
+             'updateTime': 1636784940,
+             'endTime': 1636784940,
+             'commissionFee': 100.5,
+             'state': 0},
+            {'id': 222222,
+             'name': '海物2',
+             'username': 'haiwu2',
+             'type': 1,
+             'title': 'test2',
+             'description': 'description2..................................',
+             'headcount': 2,
+             'createTime': 1636789940,
+             'updateTime': 1636789940,
+             'endTime': 1636789940,
+             'commissionFee': 120.5,
+             'state': 1},
+            {'id': 33333,
+             'name': '海物3',
+             'username': 'haiwu3',
+             'type': 2,
+             'title': 'test3',
+             'description': 'description3..................................',
+             'headcount': 3,
+             'createTime': 1636784940,
+             'updateTime': 1636784940,
+             'endTime': 1636784940,
+             'commissionFee': 10.5,
+             'state': 2},
+            {'id': 44444,
+             'name': '海物4',
+             'username': 'haiwu4',
+             'type': 3,
+             'title': 'test4',
+             'description': 'description4..................................',
+             'headcount': 4,
+             'createTime': 1636784940,
+             'updateTime': 1636784940,
+             'endTime': 1636784940,
+             'commissionFee': 1000.5,
+             'state': 3},
+            {'id': 555555,
+             'name': '海物5',
+             'username': 'haiwu5',
+             'type': 4,
+             'title': 'test5',
+             'description': 'description5..................................',
+             'headcount': 1,
+             'createTime': 1636784940,
+             'updateTime': 1636784940,
+             'endTime': 1636784940,
+             'commissionFee': 100.5,
+             'state': 0},
+            {'id': 666666,
+             'name': '海物1',
+             'username': 'haiwu1',
+             'type': 0,
+             'title': 'test6',
+             'description': 'description1..................................',
+             'headcount': 1,
+             'createTime': 1636784940,
+             'updateTime': 1636784940,
+             'endTime': 1636784940,
+             'commissionFee': 100.5,
+             'state': 0},
+        ]
+    })
+
+@app.route('/req/delete',methods=['POST'])
+def deal_req_delete():
+    params = request.get_json(force=True)
+    print(request.path, " : ", params)
+    return jsonify({'status': {
+        'code': 200,
+        'msg': 'OK',
+    }})
+
+@app.route('/req/update',methods=['POST'])
+def deal_req_update():
+    params = request.get_json(force=True)
+    print(request.path, " : ", params)
+    return jsonify({'status': {
+        'code': 200,
+        'msg': 'OK',
+    }})
+
+@app.route('/req/add',methods=['POST'])
+def deal_req_add():
+    params = request.get_json(force=True)
+    print(request.path, " : ", params)
+    return jsonify({'status': {
+        'code': 200,
+        'msg': 'OK',
+    },'id':123456})
+
 if __name__ == '__main__':
     app.run(port=5000)

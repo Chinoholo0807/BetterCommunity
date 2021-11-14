@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-11 17:00:10
  * @LastEditors: l
- * @LastEditTime: 2021-11-13 20:17:42
+ * @LastEditTime: 2021-11-14 19:55:31
  * @FilePath: \frontend\src\pages\Dashboard.vue
 -->
 <template>
@@ -43,6 +43,7 @@
           title="用户基础信息"
           :column="1"
           border
+          style="background-color:#FFF"
         >
           <template slot="extra">
             <el-button type="primary" size="small" @click="updateUserInfo">修改信息</el-button>
@@ -138,7 +139,7 @@
 
 <script>
 import { defineComponent } from "@vue/composition-api";
-import UpdateUserDialog from '@/pages/UpdateUserDialog' 
+import UpdateUserDialog from '@/dialog/UpdateUserDialog'
 export default defineComponent({
   components: { UpdateUserDialog },
   created() {
@@ -157,6 +158,13 @@ export default defineComponent({
       // console.log(result.data)
       if (result.data.status.code == 200) {
         this.userInfo = result.data;
+        // 利用sessionStorage存储用户信息
+        window.sessionStorage.setItem('username',result.data.username)
+        window.sessionStorage.setItem('name',result.data.name)
+        window.sessionStorage.setItem('type',result.data.type)
+        window.sessionStorage.setItem('userLevel',result.data.userLevel)
+        window.sessionStorage.setItem('regCity',result.data.regCity)
+        window.sessionStorage.setItem('regCommunity',result.data.regCommunity)
         console.log("getUserInfo success");
       } else {
         this.$message({
@@ -203,12 +211,7 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-.el-card {
-  margin-bottom: 20px;
-}
-.el-row {
-  margin-bottom: 20px;
-}
+
 .user-avator {
   width: 120px;
   height: 120px;

@@ -143,7 +143,7 @@ export default defineComponent({
           if (result.data.status.code == 200) {
             // 修改信息成功
             this.$message({
-              message: result.data.status.msg,
+              message: "修改用户信息成功",
               type: "success",
             });
             this.dialogVisible = false;
