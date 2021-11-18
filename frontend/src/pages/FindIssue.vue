@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-11 17:00:10
  * @LastEditors: l
- * @LastEditTime: 2021-11-18 01:05:54
+ * @LastEditTime: 2021-11-18 15:22:42
  * @FilePath: \frontend\src\pages\FindIssue.vue
 -->
 <template>
@@ -12,7 +12,7 @@
       <el-col>
         <el-row>
           <el-form ref="queryForm" :model="query" label-width="80px">
-            <el-col :span="5">
+            <el-col :span="4">
               <el-form-item label="委托类型">
                 <el-select v-model="query.type" placeholder="委托类型">
                   <el-option label="小时工" :value="0"></el-option>
@@ -24,7 +24,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="5">
+            <el-col :span="4">
               <el-form-item label="主题名称">
                 <el-input
                   v-model="query.title"
@@ -32,7 +32,7 @@
                 ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="5">
+            <el-col :span="4">
               <el-form-item label="小区名称">
                 <el-input
                   v-model="query.regCommunity"
@@ -40,7 +40,14 @@
                 ></el-input>
               </el-form-item>
             </el-col>
-
+            <el-col :span="4">
+              <el-form-item label="委托id">
+                <el-input
+                  v-model="query.id"
+                  placeholder="委托id"
+                ></el-input>
+              </el-form-item>
+            </el-col>
           </el-form>
 
 
@@ -224,6 +231,7 @@ export default defineComponent({
         title: "",
         regCommunity: window.sessionStorage.getItem('regCommunity'),
         type: 5,
+        id : "",
       },
     };
   },
@@ -284,7 +292,7 @@ export default defineComponent({
       console.log("[FindIssue]handleResp...", index, row);
       this.dialogRespOpen = true;
       this.$nextTick(() => {
-          this.$refs.issueRespDialogRef.init(row);
+          this.$refs.issueRespDialogRef.init(row, "add");
       })
     },
     async handleSearch() {

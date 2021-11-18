@@ -1,21 +1,15 @@
 <template>
   <div class="container">
     <el-row :gutter="0">
-      <!-- <div class="handle-box">
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
-          >搜索</el-button
-        >
-      </div> -->
-      <!-- 委托具体信息表格 -->
       <el-col>
-        <el-row>
+        <!-- <el-row>
           <el-button type="primary" icon="el-icon-plus" @click="handleAdd"
             >添加</el-button
           >
-        </el-row>
+        </el-row> -->
 
         <el-table
-          :data="issues"
+          :data="resps"
           border
           style="width: 100%"
           stripe
@@ -26,58 +20,16 @@
             prop="id"
             align="center"
             header-align="center"
-            label="请求id"
+            label="响应id"
             width="0"
           >
           </el-table-column>
 
           <el-table-column
-            prop="name"
+            prop="requestId"
             align="center"
             header-align="center"
-            label="请求者名称"
-            width="0"
-          >
-          </el-table-column>
-
-          <el-table-column
-            prop="type"
-            align="center"
-            header-align="center"
-            label="请求类型"
-            width="0"
-          >
-            <template slot-scope="scope">
-              <div v-if="scope.row.type == 0">
-                <i class="el-icon-time"></i>
-                <span style="margin-left: 10px align= 'center'">小时工</span>
-              </div>
-              <div v-else-if="scope.row.type == 1">
-                <i class="el-icon-goods"></i>
-                <span style="margin-left: 10px align= 'center'">搬重物</span>
-              </div>
-              <div v-else-if="scope.row.type == 2">
-                <i class="el-icon-location-outline"></i>
-                <span style="margin-left: 10px align= 'center'"
-                  >上下班打车</span
-                >
-              </div>
-              <div v-else-if="scope.row.type == 3">
-                <i class="el-icon-service"></i>
-                <span style="margin-left: 10px align= 'center'">社区志愿</span>
-              </div>
-              <div v-else-if="scope.row.type == 4">
-                <i class="el-icon-date"></i>
-                <span style="margin-left: 10px align= 'center'">其他</span>
-              </div>
-            </template>
-          </el-table-column>
-
-          <el-table-column
-            prop="title"
-            align="center"
-            header-align="center"
-            label="请求主题名称"
+            label="委托id"
             width="0"
           >
           </el-table-column>
@@ -99,13 +51,13 @@
           <el-table-column
             header-align="center"
             align="center"
-            label="结束时间"
+            label="修改时间"
             width="0"
           >
             <template slot-scope="scope">
               <i class="el-icon-time"></i>
               <span style="margin-left: 10px">{{
-                timeFormat(scope.row.endTime)
+                timeFormat(scope.row.updateTime)
               }}</span>
             </template>
           </el-table-column>
@@ -119,16 +71,10 @@
           >
             <template slot-scope="scope">
               <!-- <i class="el-icon-time"></i> -->
-              <el-tag v-if="scope.row.state == 0" type="info">待响应</el-tag>
-              <el-tag v-else-if="scope.row.state == 1" type="danger"
-                >已取消</el-tag
-              >
-              <el-tag v-else-if="scope.row.state == 2" type="warning"
-                >进行中</el-tag
-              >
-              <el-tag v-else-if="scope.row.state == 3" type="success"
-                >已完成</el-tag
-              >
+              <el-tag v-if="scope.row.state == 0" type="warning">待接受</el-tag>
+              <el-tag v-else-if="scope.row.state == 1" type="success">被同意</el-tag>
+              <el-tag v-else-if="scope.row.state == 2" type="danger">被拒绝</el-tag>
+              <el-tag v-else-if="scope.row.state == 3" type="info">主动取消</el-tag>
             </template>
           </el-table-column>
 
@@ -156,7 +102,6 @@
                 v-if="scope.row.state == 0"
                 >删除
               </el-button>
-              <!-- </div> -->
 
               <el-button
                 type="text"
@@ -169,47 +114,45 @@
         </el-table>
       </el-col>
     </el-row>
-    <detail-issue-dialog v-if="dialogOpen" ref="detailIssueDialogRef" />
+    <issue-resp-dialog v-if="dialogOpen" ref="issueRespDialogRef"/>
   </div>
 </template>
 
 <script>
 import { defineComponent } from "@vue/composition-api";
 import DetailIssueDialog from "@/dialog/DetailIssueDialog";
-// import DetailIssueDialog from "../dialog/DetailIssueDialog.vue";
-// import func from "../../vue-temp/vue-editor-bridge";
+import IssueRespDialog from '@/dialog/IssueRespDialog'
 export default defineComponent({
-  components: { DetailIssueDialog },
+  components: { DetailIssueDialog ,IssueRespDialog},
   created() {
-    this.getIssues();
+    this.getResps();
   },
   data() {
     return {
-      issues: [],
+      resps: [],
       isRouterAlive: true,
       dialogOpen: false,
     };
   },
   methods: {
-    async getIssues() {
-      console.log("[MyIssue]getIssues...");
-      const result = await this.$http.get("req/mine");
-      //   console.log(result.data);
+    async getResps() {
+      console.log("[MyResp]getResps...");
+      const result = await this.$http.get("resp/mine");
       if (result.data.status.code == 200) {
-        this.issues = result.data.issues;
-        console.log("[MyIssue]getIssues success");
+        this.resps = result.data.resps;
+        console.log("[MyResp]getResps success");
         // this.reload();
       } else {
         this.$message({
-          message: "获取请求帮忙信息失败:" + result.data.status.msg,
+          message: "获取响应信息失败:" + result.data.status.msg,
           type: "error",
         });
       }
     },
     reload() {
-      console.log("[MyIssue]reload ...");
+      console.log("[MyResp]reload ...");
       this.isRouterAlive = false;
-      this.getIssues();
+      this.getResps();
       this.$nextTick(() => {
         this.isRouterAlive = true;
       });
@@ -230,29 +173,29 @@ export default defineComponent({
       return "nil-row";
     },
     handleEdit(index, row) {
-      console.log("[MyIssue]handleEdit...", index, row);
+      console.log("[MyResp]handleEdit...", index, row);
       this.dialogOpen = true;
       this.$nextTick(() => {
-        this.$refs.detailIssueDialogRef.init(row, "edit");
+        this.$refs.issueRespDialogRef.init(row, "edit");
       });
     },
     handleDelete(index, row) {
       console.log("[MyIssue]handleDelete...", index, row);
-      this.$confirm("确定要删除这个请求帮忙吗？")
+      this.$confirm("确定要删除这个响应吗？")
         .then(async (_) => {
           //确认删除请求
-          const result = await this.$http.post("req/delete", { id: row.id });
+          const result = await this.$http.post("resp/delete", { id: row.id });
           if (result.data.status.code == 200) {
             // this.issues = result.data.issues;
             // console.log("[MyIssue]handleDelete success");
             this.$message({
-              message: "删除请求帮忙成功",
+              message: "删除响应成功",
               type: "success",
             });
             this.reload();
           } else {
             this.$message({
-              message: "删除请求帮忙失败:" + result.data.status.msg,
+              message: "删除响应失败:" + result.data.status.msg,
               type: "error",
             });
           }
@@ -265,26 +208,7 @@ export default defineComponent({
       console.log("[MyIssue]handleLook...", index, row);
       this.dialogOpen = true;
       this.$nextTick(() => {
-        this.$refs.detailIssueDialogRef.init(row, "look");
-      });
-    },
-    handleAdd() {
-      console.log("[MyIssue]handleAdd...");
-      this.dialogOpen = true;
-      let tmpIssue = {
-        type: 4,
-        title: "",
-        description: "",
-        headcount: 1,
-        createTime: parseInt(new Date().getTime() / 1000),
-        endTime: parseInt(new Date().getTime() / 1000),
-        commissionFee: 0.0,
-
-        // name: window.sessionStorage.getItem('name'),
-        // username: window.sessionStorage.getItem('username')
-      };
-      this.$nextTick(() => {
-        this.$refs.detailIssueDialogRef.init(tmpIssue, "add");
+        this.$refs.issueRespDialogRef.init(row, "look");
       });
     },
   },

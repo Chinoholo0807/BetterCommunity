@@ -251,6 +251,69 @@ def deal_resp_accept():
         'msg': 'OK',
     },'id':123456})
 
+
+@app.route('/resp/mine', methods=['GET'])
+def deal_resp_mine():
+    print(request.path, " : ",request.args)
+    return jsonify({'status': {
+        'code': 200,
+        'msg': 'OK'
+    },
+        'resps': [
+            {'id': 1111110,
+             'requestId':111111,
+            'createTime':1637214055,
+             'updateTime':1637214055,
+             'description':'wowwwww',
+             'state':0,
+             },
+            {'id': 1111120,
+             'requestId': 111112,
+             'createTime': 1637214055,
+             'updateTime': 1637214055,
+             'description': 'wowwwww',
+             'state': 1,
+             },
+            {'id': 1111130,
+             'requestId': 111113,
+             'createTime': 1637214055,
+             'updateTime': 1637214055,
+             'description': 'wowwwww',
+             'state': 2,
+             },
+            {'id': 1111140,
+             'requestId': 111114,
+             'createTime': 1637214055,
+             'updateTime': 1637214055,
+             'description': 'wowwwww',
+             'state': 3,
+             },
+            {'id': 1111150,
+             'requestId': 111115,
+             'createTime': 1637214055,
+             'updateTime': 1637214055,
+             'description': 'wowwwww',
+             'state': 0,
+             },
+        ]
+    })
+@app.route('/resp/delete',methods=['POST'])
+def deal_resp_delete():
+    params = request.get_json(force=True)
+    print(request.path, " : ", params)
+    return jsonify({'status': {
+        'code': 200,
+        'msg': 'OK',
+    }})
+
+@app.route('/resp/update',methods=['POST'])
+def deal_resp_update():
+    params = request.get_json(force=True)
+    print(request.path, " : ", params)
+    return jsonify({'status': {
+        'code': 200,
+        'msg': 'OK',
+    }})
 if __name__ == '__main__':
     app.run(port=5000)
                 

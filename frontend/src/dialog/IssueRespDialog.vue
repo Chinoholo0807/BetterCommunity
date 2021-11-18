@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-18 00:45:25
  * @LastEditors: l
- * @LastEditTime: 2021-11-18 01:24:32
+ * @LastEditTime: 2021-11-18 15:10:37
  * @FilePath: \frontend\src\dialog\IssueRespDialog.vue
 -->
 <template>
@@ -38,7 +38,8 @@
 
     <div slot="footer">
       <el-button @click="dialogVisible = false">取消</el-button>
-      <el-button type="primary" @click="tryRespIssue()">添加响应</el-button>
+      <el-button type="primary" @click="tryRespIssue()" v-if="type =='add'">添加响应</el-button>
+      <el-button type="primary" @click="tryUpdateResp()" v-if="type =='edit'">修改响应</el-button>
     </div>
   </el-dialog>
 </template>
@@ -51,24 +52,25 @@ export default defineComponent({
     return {
       dialogVisible: false,
       readOnly: false,
-      respForm: {
-        description: "",
-        createTime: 0,
-        requestId: 0,
-      },
-      rules: [],
+      respForm:{},
+      rules: {},
+      type:"",
     };
   },
   methods: {
     tryRespIssue() {
-      //   console.log("[IssueRespDialog]tryRespIssue...");
       this.$refs.respFormRef.validate(async (valid) => {
         if (valid) {
           console.log("[IssueRespDialog]tryRespIssue ...");
           this.respForm.createTime = parseInt(new Date().getTime() / 1000);
-          const result = await this.$http.post("resp/accept", this.respForm);
+          const result = await this.$http.post("resp/accept", 
+          {
+            requesetId:this.respForm.requestId,
+            createTime:this.respForm.createTime,
+            description:this.respForm.description,
+          });
           if (result.data.status.code == 200) {
-            // 修改issue成功
+            // 响应issue成功
             this.$message({
               message: "响应委托帮忙成功",
               type: "success",
@@ -76,7 +78,7 @@ export default defineComponent({
 
             this.dialogVisible = false;
           } else {
-            // 修改issue失败
+            // 响应issue失败
             this.$message({
               message: "响应委托帮忙失败:" + result.data.status.msg,
               type: "error",
@@ -91,13 +93,65 @@ export default defineComponent({
         }
       });
     },
-    init(row) {
-      this.respForm = {
-        description: "",
-        createTime: 0,
-        requestId: 0,
-      };
-      this.respForm.requestId = row.id;
+    tryUpdateResp(){
+      this.$refs.respFormRef.validate(async (valid)=>{
+        if(valid){
+          console.log("[IssueRespDialog]tryUpdateResp ...");
+          this.respForm.updateTime = parseInt(new Date().getTime() / 1000);
+          const result = await this.$http.post("resp/update", {
+            id:this.respForm.id,
+            description:this.respForm.description,
+            updateTime:this.respForm.updateTime,
+          });
+          if (result.data.status.code == 200) {
+            // 响应issue成功
+            this.$message({
+              message: "修改响应成功",
+              type: "success",
+            });
+
+            this.dialogVisible = false;
+          } else {
+            // 响应issue失败
+            this.$message({
+              message: "修改响应失败:" + result.data.status.msg,
+              type: "error",
+            });
+          }
+        }else{
+          //修改resp失败
+          this.$message({
+            message:"修改响应失败:"+result.data.status.msg,
+            type:"error",
+          })
+        }
+      })
+    },
+    init(row , type) {
+      if(type == "look"){
+        this.respForm = {
+          requestId : row.requesetId,
+          description : row.description,
+        }
+        this.readOnly = true;
+      }else if(type == "edit"){
+        this.respForm = {
+          requestId: row.requestId,
+          description : row.description,
+          id : row.id,
+          updateTime:0,
+        }
+        this.readOnly = false;
+      }else if(type == "add"){
+        this.respForm = {
+          requestId : row.id,
+          description : "",
+          createTime : 0 ,
+        }
+        this.readOnly = false;
+      }
+      this.type = type;
+
       this.dialogVisible = true;
     },
     dialogBeforeClose() {
