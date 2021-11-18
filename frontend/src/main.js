@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-05-31 13:38:16
  * @LastEditors: l
- * @LastEditTime: 2021-11-09 09:29:29
+ * @LastEditTime: 2021-11-17 00:11:54
  * @FilePath: \frontend\src\main.js
  */
 // The Vue build version to load with the `import` command
@@ -18,8 +18,11 @@ import axios from 'axios'
 
 
 axios.defaults.baseURL = 'http://127.0.0.1:5000/'
+// axios.defaults.baseURL = 'http://10.128.205.146:1234/'
 axios.interceptors.request.use(config=>{
-  config.headers.Authorization = window.sessionStorage.getItem('token')
+  config.headers.common['Authorization'] = window.sessionStorage.getItem('token')
+  // config.headers.accessToken = window.sessionStorage.getItem('token')
+  // config.auth= window.sessionStorage.getItem('token')
   return config
 })
 Vue.prototype.$http = axios

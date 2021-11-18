@@ -3,24 +3,55 @@
  * @Author: l
  * @Date: 2021-11-11 17:00:10
  * @LastEditors: l
- * @LastEditTime: 2021-11-17 09:46:54
- * @FilePath: \frontend\src\pages\MyIssue.vue
+ * @LastEditTime: 2021-11-18 01:05:54
+ * @FilePath: \frontend\src\pages\FindIssue.vue
 -->
 <template>
   <div class="container">
     <el-row :gutter="0">
-      <!-- <div class="handle-box">
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
-          >搜索</el-button
-        >
-      </div> -->
-      <!-- 委托具体信息表格 -->
       <el-col>
         <el-row>
-          <el-button type="primary" icon="el-icon-plus" @click="handleAdd"
-            >添加</el-button
+          <el-form ref="queryForm" :model="query" label-width="80px">
+            <el-col :span="5">
+              <el-form-item label="委托类型">
+                <el-select v-model="query.type" placeholder="委托类型">
+                  <el-option label="小时工" :value="0"></el-option>
+                  <el-option label="搬重物" :value="1"></el-option>
+                  <el-option label="上下班打车" :value="2"></el-option>
+                  <el-option label="社区志愿" :value="3"></el-option>
+                  <el-option label="其他" :value="4"></el-option>
+                  <el-option label="所有" :value="5"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="5">
+              <el-form-item label="主题名称">
+                <el-input
+                  v-model="query.title"
+                  placeholder="主题名称"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="5">
+              <el-form-item label="小区名称">
+                <el-input
+                  v-model="query.regCommunity"
+                  placeholder="小区名称"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+
+          </el-form>
+
+
+          <el-col :span="2" :offset="6"
+            ><el-button
+              type="primary"
+              icon="el-icon-search"
+              @click="handleSearch"
+              >查找</el-button
+            ></el-col
           >
-          <!-- <el-button type="primary" icon="el-icon-search">查找</el-button> -->
         </el-row>
 
         <el-table
@@ -123,7 +154,7 @@
             header-align="center"
             align="center"
             prop="state"
-            label="状态"
+            label="请求状态"
             width="0"
           >
             <template slot-scope="scope">
@@ -148,24 +179,7 @@
             header-align="center"
           >
             <template #default="scope">
-              <!-- <div v-if="scope.row.state == 0"> -->
               {{ scope.row.state ? "" : "" }}
-              <el-button
-                type="text"
-                icon="el-icon-edit"
-                @click="handleEdit(scope.$index, scope.row)"
-                v-if="scope.row.state == 0"
-                >编辑
-              </el-button>
-
-              <el-button
-                type="text"
-                icon="el-icon-delete"
-                @click="handleDelete(scope.$index, scope.row)"
-                v-if="scope.row.state == 0"
-                >删除
-              </el-button>
-              <!-- </div> -->
 
               <el-button
                 type="text"
@@ -173,28 +187,44 @@
                 @click="handleLook(scope.$index, scope.row)"
                 >查看
               </el-button>
+
+              <el-button
+                type="text"
+                icon="el-icon-help"
+                @click="handleResp(scope.$index, scope.row)"
+                v-if="scope.row.state == 0"
+                >响应
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-col>
     </el-row>
-    <detail-issue-dialog v-if="dialogOpen" ref="detailIssueDialogRef" />
+    <detail-issue-dialog v-if="dialogIssueOpen" ref="detailIssueDialogRef" />
+    <issue-resp-dialog v-if="dialogRespOpen" ref="issueRespDialogRef" />
   </div>
 </template>
 
 <script>
 import { defineComponent } from "@vue/composition-api";
-import DetailIssueDialog from "@/dialog/DetailIssueDialog";
+import IssueRespDialog from '@/dialog/IssueRespDialog'
+import DetailIssueDialog from '@/dialog/DetailIssueDialog'
 export default defineComponent({
-  components: { DetailIssueDialog },
+  components: { DetailIssueDialog ,IssueRespDialog},
   created() {
-    this.getIssues();
+    this.handleSearch();
   },
   data() {
     return {
       issues: [],
       isRouterAlive: true,
-      dialogOpen: false,
+      dialogIssueOpen: false,
+      dialogRespOpen: false,
+      query: {
+        title: "",
+        regCommunity: window.sessionStorage.getItem('regCommunity'),
+        type: 5,
+      },
     };
   },
   methods: {
@@ -214,9 +244,16 @@ export default defineComponent({
       }
     },
     reload() {
-      console.log("[MyIssue]reload ...");
+      console.log("[FindIssue]reload ...");
       this.isRouterAlive = false;
       this.getIssues();
+      this.$nextTick(() => {
+        this.isRouterAlive = true;
+      });
+    },
+    refresh() {
+      console.log("[FindIssue]refresh ...");
+      this.isRouterAlive = false;
       this.$nextTick(() => {
         this.isRouterAlive = true;
       });
@@ -236,63 +273,40 @@ export default defineComponent({
         return "finish-row";
       return "nil-row";
     },
-    handleEdit(index, row) {
-      console.log("[MyIssue]handleEdit...", index, row);
-      this.dialogOpen = true;
-      this.$nextTick(() => {
-        this.$refs.detailIssueDialogRef.init(row, "edit");
-      });
-    },
-    handleDelete(index, row) {
-      console.log("[MyIssue]handleDelete...", index, row);
-      this.$confirm("确定要删除这个请求帮忙吗？")
-        .then(async (_) => {
-          //确认删除请求
-          const result = await this.$http.post("req/delete", { id: row.id });
-          if (result.data.status.code == 200) {
-            // this.issues = result.data.issues;
-            // console.log("[MyIssue]handleDelete success");
-            this.$message({
-              message: "删除请求帮忙成功",
-              type: "success",
-            });
-            this.reload();
-          } else {
-            this.$message({
-              message: "删除请求帮忙失败:" + result.data.status.msg,
-              type: "error",
-            });
-          }
-        })
-        .catch((_) => {
-          //取消删除，无事发生
-        });
-    },
     handleLook(index, row) {
-      console.log("[MyIssue]handleLook...", index, row);
-      this.dialogOpen = true;
+      console.log("[FindIssue]handleLook...", index, row);
+      this.dialogIssueOpen = true;
       this.$nextTick(() => {
         this.$refs.detailIssueDialogRef.init(row, "look");
       });
     },
-    handleAdd() {
-      console.log("[MyIssue]handleAdd...");
-      this.dialogOpen = true;
-      let tmpIssue = {
-        type: 4,
-        title: "",
-        description: "",
-        headcount: 1,
-        createTime: parseInt(new Date().getTime() / 1000),
-        endTime: parseInt(new Date().getTime() / 1000),
-        commissionFee: 0.0,
-
-        // name: window.sessionStorage.getItem('name'),
-        // username: window.sessionStorage.getItem('username')
-      };
+    handleResp(index, row) {
+      console.log("[FindIssue]handleResp...", index, row);
+      this.dialogRespOpen = true;
       this.$nextTick(() => {
-        this.$refs.detailIssueDialogRef.init(tmpIssue, "add");
+          this.$refs.issueRespDialogRef.init(row);
+      })
+    },
+    async handleSearch() {
+      console.log("[FindIssue]handleSearch...");
+      const result = await this.$http.get("/req/query", {
+          params:this.query,
       });
+      if (result.data.status.code == 200) {
+        this.issues = result.data.issues;
+        console.log("[FindIssue]handleSearch success");
+        this.$message({
+          message: "查询成功",
+          type: "success",
+        });
+        this.issues = result.data.issues;
+        this.refresh();
+      } else {
+        this.$message({
+          message: "查询失败:" + result.data.status.msg,
+          type: "error",
+        });
+      }
     },
   },
   computed: {

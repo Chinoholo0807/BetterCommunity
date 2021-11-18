@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-05-31 13:38:16
  * @LastEditors: l
- * @LastEditTime: 2021-11-08 09:24:22
+ * @LastEditTime: 2021-11-17 23:52:52
  * @FilePath: \frontend\config\index.js
  */
 'use strict'
@@ -18,6 +18,7 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+    // headers:{'Access-Control-Allow-Origin':'*'},
     proxyTable: {
       '/api': {
         target: 'http://127.0.0.1:5000', //mine

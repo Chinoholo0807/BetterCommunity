@@ -1,11 +1,3 @@
-<!--
- * @Description: 
- * @Author: l
- * @Date: 2021-11-11 17:00:10
- * @LastEditors: l
- * @LastEditTime: 2021-11-17 09:46:54
- * @FilePath: \frontend\src\pages\MyIssue.vue
--->
 <template>
   <div class="container">
     <el-row :gutter="0">
@@ -20,7 +12,6 @@
           <el-button type="primary" icon="el-icon-plus" @click="handleAdd"
             >添加</el-button
           >
-          <!-- <el-button type="primary" icon="el-icon-search">查找</el-button> -->
         </el-row>
 
         <el-table
@@ -185,6 +176,8 @@
 <script>
 import { defineComponent } from "@vue/composition-api";
 import DetailIssueDialog from "@/dialog/DetailIssueDialog";
+// import DetailIssueDialog from "../dialog/DetailIssueDialog.vue";
+// import func from "../../vue-temp/vue-editor-bridge";
 export default defineComponent({
   components: { DetailIssueDialog },
   created() {

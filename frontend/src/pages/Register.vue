@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-11 18:32:59
  * @LastEditors: l
- * @LastEditTime: 2021-11-13 20:21:50
+ * @LastEditTime: 2021-11-16 23:23:06
  * @FilePath: \frontend\src\pages\Register.vue
 -->
 <template>
@@ -169,7 +169,7 @@ export default defineComponent({
           //修改创建时间和修改时间
           this.$data.registerForm.regTime = new Date().getTime()
           this.$data.registerForm.updateTime = new Date().getTime()
-          const result = await this.$http.post('register', this.registerForm)
+          const result = await this.$http.post('user/register', this.registerForm)
           
           if (result.data.status.code == 200) {
             // 注册成功

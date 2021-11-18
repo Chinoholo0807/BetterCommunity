@@ -11,7 +11,7 @@ def hello_world():
     return 'Hello, World!'
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/user/login', methods=['POST'])
 def deal_login():
     params = request.get_json(force=True)
     print(request.path, " : ", params)
@@ -28,7 +28,7 @@ def deal_login():
         }})
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/user/register', methods=['POST'])
 def deal_register():
     params = request.get_json(force=True)
     print(request.path, " : ", params)
@@ -195,5 +195,62 @@ def deal_req_add():
         'msg': 'OK',
     },'id':123456})
 
+@app.route('/req/query',methods=['GET'])
+def deal_req_query():
+    print(request.path, " : ",request.args)
+    return jsonify({'status': {
+        'code': 200,
+        'msg': 'OK'
+    },
+        'issues': [
+            {'id': 222222,
+             'name': '海物2',
+             'username': 'haiwu2',
+             'type': 1,
+             'title': 'test2',
+             'description': 'description2..................................',
+             'headcount': 2,
+             'createTime': 1636789940,
+             'updateTime': 1636789940,
+             'endTime': 1636789940,
+             'commissionFee': 120.5,
+             'state': 1},
+            {'id': 44444,
+             'name': '海物4',
+             'username': 'haiwu4',
+             'type': 3,
+             'title': 'test4',
+             'description': 'description4..................................',
+             'headcount': 4,
+             'createTime': 1636784940,
+             'updateTime': 1636784940,
+             'endTime': 1636784940,
+             'commissionFee': 1000.5,
+             'state': 3},
+            {'id': 666666,
+             'name': '海物1',
+             'username': 'haiwu1',
+             'type': 0,
+             'title': 'test6',
+             'description': 'description1..................................',
+             'headcount': 1,
+             'createTime': 1636784940,
+             'updateTime': 1636784940,
+             'endTime': 1636784940,
+             'commissionFee': 100.5,
+             'state': 0},
+        ]
+    })
+
+@app.route('/resp/accept',methods=['POST'])
+def deal_resp_accept():
+    params = request.get_json(force=True)
+    print(request.path, " : ", params)
+    return jsonify({'status': {
+        'code': 200,
+        'msg': 'OK',
+    },'id':123456})
+
 if __name__ == '__main__':
     app.run(port=5000)
+                

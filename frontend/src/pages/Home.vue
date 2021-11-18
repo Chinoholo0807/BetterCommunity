@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-08 10:13:44
  * @LastEditors: l
- * @LastEditTime: 2021-11-14 21:02:35
+ * @LastEditTime: 2021-11-18 00:21:43
  * @FilePath: \frontend\src\pages\Home.vue
 -->
 <template>
@@ -84,16 +84,22 @@ export default defineComponent({
               title: "我的委托",
               index: "/myissue",
             },
-            {
-              title: "发现委托",
-              index: "/allissue",
-            },
           ],
         },
         {
           title: "我可以",
           index: "/myrecv",
           icon: "el-icon-thumb",
+          subs: [
+            {
+              title: "发现委托",
+              index: "/findissue",
+            },
+            {
+              title: "我的响应",
+              index: "/myresp",
+            },
+          ],
         },
         {
           title: "统计数据",
@@ -137,6 +143,6 @@ export default defineComponent({
   top: 60px;
   bottom: 0;
   overflow-y: scroll;
-  background-color:#dce4ec ;
+  background-color: #dce4ec;
 }
 </style>

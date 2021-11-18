@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-06-01 10:29:38
  * @LastEditors: l
- * @LastEditTime: 2021-11-13 14:33:27
+ * @LastEditTime: 2021-11-16 23:22:50
  * @FilePath: \frontend\src\pages\Login.vue
 -->
 <template>
@@ -77,7 +77,7 @@ export default defineComponent({
       console.log('login')
       this.$refs.loginFormRef.validate(async (valid) => {
         if (valid) {
-          const result = await this.$http.post('login', this.loginForm)
+          const result = await this.$http.post('user/login', this.loginForm)
           if (result.data.status.code == 200) {
             // 登录成功
             this.$message({
