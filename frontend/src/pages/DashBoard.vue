@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-11 17:00:10
  * @LastEditors: l
- * @LastEditTime: 2021-11-14 19:55:31
+ * @LastEditTime: 2021-11-18 16:51:27
  * @FilePath: \frontend\src\pages\Dashboard.vue
 -->
 <template>
@@ -203,7 +203,7 @@ export default defineComponent({
     timeFormat() {
       return function (ts) {
         if(!ts) return ''
-        let date = new Date(ts)
+        let date = new Date(ts *1000)
         return date.Format('yyyy-MM-dd HH:mm:ss')
       };
     },

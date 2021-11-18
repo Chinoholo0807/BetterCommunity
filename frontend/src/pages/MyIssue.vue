@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-11 17:00:10
  * @LastEditors: l
- * @LastEditTime: 2021-11-17 09:46:54
+ * @LastEditTime: 2021-11-18 17:17:12
  * @FilePath: \frontend\src\pages\MyIssue.vue
 -->
 <template>
@@ -165,28 +165,37 @@
                 v-if="scope.row.state == 0"
                 >删除
               </el-button>
-              <!-- </div> -->
+
+              <el-button
+                type="text"
+                icon="el-icon-bell"
+                @click="handleResp(scope.$index, scope.row)"
+                v-if="scope.row.state != 1"
+                >查看响应
+              </el-button>
 
               <el-button
                 type="text"
                 icon="el-icon-search"
                 @click="handleLook(scope.$index, scope.row)"
-                >查看
+                >查看详情
               </el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-col>
     </el-row>
-    <detail-issue-dialog v-if="dialogOpen" ref="detailIssueDialogRef" />
+	<issue-resp-list-dialog v-if="dialogListOpen" ref="issueRespListDialogRef"/>
+    <detail-issue-dialog v-if="dialogIssueOpen" ref="detailIssueDialogRef" />
   </div>
 </template>
 
 <script>
 import { defineComponent } from "@vue/composition-api";
 import DetailIssueDialog from "@/dialog/DetailIssueDialog";
+import IssueRespListDialog from '@/dialog/IssueRespListDialog'
 export default defineComponent({
-  components: { DetailIssueDialog },
+  components: { DetailIssueDialog , IssueRespListDialog },
   created() {
     this.getIssues();
   },
@@ -194,7 +203,8 @@ export default defineComponent({
     return {
       issues: [],
       isRouterAlive: true,
-      dialogOpen: false,
+      dialogIssueOpen: false,
+	  dialogListOpen: false,
     };
   },
   methods: {
@@ -238,7 +248,7 @@ export default defineComponent({
     },
     handleEdit(index, row) {
       console.log("[MyIssue]handleEdit...", index, row);
-      this.dialogOpen = true;
+      this.dialogIssueOpen = true;
       this.$nextTick(() => {
         this.$refs.detailIssueDialogRef.init(row, "edit");
       });
@@ -270,14 +280,14 @@ export default defineComponent({
     },
     handleLook(index, row) {
       console.log("[MyIssue]handleLook...", index, row);
-      this.dialogOpen = true;
+      this.dialogIssueOpen = true;
       this.$nextTick(() => {
         this.$refs.detailIssueDialogRef.init(row, "look");
       });
     },
     handleAdd() {
       console.log("[MyIssue]handleAdd...");
-      this.dialogOpen = true;
+      this.dialogIssueOpen = true;
       let tmpIssue = {
         type: 4,
         title: "",
@@ -286,14 +296,32 @@ export default defineComponent({
         createTime: parseInt(new Date().getTime() / 1000),
         endTime: parseInt(new Date().getTime() / 1000),
         commissionFee: 0.0,
-
-        // name: window.sessionStorage.getItem('name'),
-        // username: window.sessionStorage.getItem('username')
       };
       this.$nextTick(() => {
         this.$refs.detailIssueDialogRef.init(tmpIssue, "add");
       });
     },
+    async handleResp(index, row){
+      console.log("[MyIssue]handleResp...", index, row);
+      const result = await this.$http.get("resp/query",{
+        requestId:row.id,
+        id:"",
+      });
+      if (result.data.status.code == 200) {
+        console.log("[MyIssue]handleResp success");
+        //获取响应成功
+		this.dialogListOpen = true;
+		// console.log(result.data.resps)
+		this.$nextTick(() =>{
+			this.$refs.issueRespListDialogRef.init(result.data.resps,"")
+		})
+      } else {
+        this.$message({
+          	message: "获取响应信息失败:" + result.data.status.msg,
+          	type: "error",
+        });
+    	}
+	}
   },
   computed: {
     timeFormat() {

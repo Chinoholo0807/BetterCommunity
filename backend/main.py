@@ -314,6 +314,69 @@ def deal_resp_update():
         'code': 200,
         'msg': 'OK',
     }})
+
+@app.route('/resp/query',methods=['GET'])
+def deal_resp_query():
+    print(request.path, " : ", request.args)
+    return jsonify({'status': {
+        'code': 200,
+        'msg': 'OK',
+    },'resps':[
+        {
+            'id':1024,
+            'requestId':111111,
+            'createTime':1637214055,
+            'updateTime':1637214055,
+            'description':'please~',
+            'state':0,
+            'respId':999,
+            'respUsername':'haiwu',
+            'respName':'海物',
+        },
+        {
+            'id': 1025,
+            'requestId': 222222,
+            'createTime': 1637214055,
+            'updateTime': 1637214055,
+            'description': 'please~',
+            'state':1,
+            'respId': 999,
+            'respUsername': 'haiwu',
+            'respName': '海物',
+        },
+        {
+            'id':1026,
+            'requestId':333333,
+            'createTime':1637214055,
+            'updateTime':1637214055,
+            'description':'please~',
+            'state':2,
+            'respId': 999,
+            'respUsername': 'haiwu',
+            'respName': '海物',
+        },
+        {
+            'id': 1027,
+            'requestId': 4444444,
+            'createTime': 1637214055,
+            'updateTime': 1637214055,
+            'description': 'please~',
+            'state': 3,
+            'respId': 999,
+            'respUsername': 'haiwu',
+            'respName': '海物',
+        }
+
+    ]})
+
+@app.route('/req/reply',methods=['POST'])
+def deal_req_reply():
+    params = request.get_json(force=True)
+    print(request.path, " : ", params)
+    return jsonify({'status': {
+        'code': 200,
+        'msg': 'OK',
+    }})
 if __name__ == '__main__':
     app.run(port=5000)
                 
