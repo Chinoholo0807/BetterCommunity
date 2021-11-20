@@ -91,7 +91,7 @@
                 type="text"
                 icon="el-icon-edit"
                 @click="handleEdit(scope.$index, scope.row)"
-                v-if="scope.row.state == 0"
+                v-if="scope.row.state == 0 && !isAdmin"
                 >编辑
               </el-button>
 
@@ -99,7 +99,7 @@
                 type="text"
                 icon="el-icon-delete"
                 @click="handleDelete(scope.$index, scope.row)"
-                v-if="scope.row.state == 0"
+                v-if="scope.row.state == 0 && !isAdmin"
                 >删除
               </el-button>
 
@@ -107,7 +107,15 @@
                 type="text"
                 icon="el-icon-search"
                 @click="handleLook(scope.$index, scope.row)"
-                >查看
+                >查看响应
+              </el-button>
+
+               <el-button
+                type="text"
+                icon="el-icon-search"
+                @click="handleLookUser(scope.$index, scope.row)"
+                v-if="isAdmin"
+                >查看响应者
               </el-button>
             </template>
           </el-table-column>
@@ -115,6 +123,7 @@
       </el-col>
     </el-row>
     <issue-resp-dialog v-if="dialogOpen" ref="issueRespDialogRef"/>
+    <user-info-dialog  v-if="userInfoOpen" ref="userInfoRef2" />
   </div>
 </template>
 
@@ -122,8 +131,9 @@
 import { defineComponent } from "@vue/composition-api";
 import DetailIssueDialog from "@/dialog/DetailIssueDialog";
 import IssueRespDialog from '@/dialog/IssueRespDialog'
+import UserInfoDialog from '@/dialog/UserInfoDialog'
 export default defineComponent({
-  components: { DetailIssueDialog ,IssueRespDialog},
+  components: { DetailIssueDialog ,IssueRespDialog, UserInfoDialog},
   created() {
     this.getResps();
   },
@@ -132,12 +142,27 @@ export default defineComponent({
       resps: [],
       isRouterAlive: true,
       dialogOpen: false,
+      isAdmin:false,
+      userInfoOpen:false,
     };
   },
   methods: {
     async getResps() {
       console.log("[MyResp]getResps...");
-      const result = await this.$http.get("resp/mine");
+      let result;
+      if(window.sessionStorage.getItem('type') =="0"){//普通用户
+        this.isAdmin=false;
+        result = await this.$http.get("resp/mine");
+      }
+          
+      else if(window.sessionStorage.getItem('type') =="1"){//管理员
+          this.isAdmin=true;
+          result = await this.$http.get("resp/query",{
+            params:{
+              id:"",
+              requestId:"",
+            }})
+      }
       if (result.data.status.code == 200) {
         this.resps = result.data.resps;
         console.log("[MyResp]getResps success");
@@ -211,6 +236,29 @@ export default defineComponent({
         this.$refs.issueRespDialogRef.init(row, "look");
       });
     },
+    async handleLookUser(index,row){
+      console.log("[MyResp]handleLookUser ...")
+      console.log(row)
+      const result = await this.$http.get("user/info",{
+        params:{
+          username:row.respUsername,
+        }
+      });
+      if (result.data.status.code == 200) {
+        console.log("[MyResp]handleLookUser success");
+        let userInfo = result.data;
+        userInfo.password="";
+        this.userInfoOpen=true;
+        this.$nextTick(()=>{
+            this.$refs.userInfoRef2.init(userInfo,"look")
+        })
+      } else {
+        this.$message({
+          message: "获取用户信息失败:" + result.data.status.msg,
+          type: "error",
+        });
+      }
+    }
   },
   computed: {
     timeFormat() {

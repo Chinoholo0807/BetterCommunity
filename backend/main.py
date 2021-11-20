@@ -45,10 +45,11 @@ def deal_register():
         }})
 
 
-@app.route('/user/info', methods=['POST', 'GET'])
+@app.route('/user/info', methods=['GET'])
 def handler_get_user_info():
     # params = request.get_json(force=True)
-    print(request.path, " : ")
+    print(request.path, " : ",request.args)
+
     return jsonify({'status': {
         'code': 200,
         'msg': 'Get info success'

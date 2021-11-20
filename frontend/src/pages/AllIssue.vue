@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-11 17:00:10
  * @LastEditors: l
- * @LastEditTime: 2021-11-20 13:39:32
+ * @LastEditTime: 2021-11-20 19:54:45
  * @FilePath: \frontend\src\pages\AllIssue.vue
 -->
 <template>
@@ -192,7 +192,14 @@
                 type="text"
                 icon="el-icon-search"
                 @click="handleLook(scope.$index, scope.row)"
-                >查看
+                >查看委托
+              </el-button>
+              <el-button
+                type="text"
+                icon="el-icon-search"
+                @click="handleLookUser(scope.$index, scope.row)"
+                v-if="isAdmin"
+                >查看委托者
               </el-button>
             </template>
           </el-table-column>
@@ -201,6 +208,7 @@
     </el-row>
     <detail-issue-dialog v-if="dialogIssueOpen" ref="detailIssueDialogRef" />
     <issue-resp-dialog v-if="dialogRespOpen" ref="issueRespDialogRef" />
+    <user-info-dialog v-if="userInfoOpen" ref="userInfoRef1" />
   </div>
 </template>
 
@@ -208,8 +216,9 @@
 import { defineComponent } from "@vue/composition-api";
 import IssueRespDialog from '@/dialog/IssueRespDialog'
 import DetailIssueDialog from '@/dialog/DetailIssueDialog'
+import UserInfoDialog from '@/dialog/UserInfoDialog'
 export default defineComponent({
-  components: { DetailIssueDialog ,IssueRespDialog},
+  components: { DetailIssueDialog ,IssueRespDialog , UserInfoDialog},
   created() {
     this.handleSearch();
   },
@@ -225,6 +234,8 @@ export default defineComponent({
         type: 5,
         id : "",
       },
+      isAdmin:false,
+      userInfoOpen:false,
     };
   },
   methods: {
@@ -274,27 +285,33 @@ export default defineComponent({
       return "nil-row";
     },
     handleLook(index, row) {
-      console.log("[FindIssue]handleLook...", index, row);
+      console.log("[AllIssue]handleLook...", index, row);
       this.dialogIssueOpen = true;
       this.$nextTick(() => {
         this.$refs.detailIssueDialogRef.init(row, "look");
       });
     },
     handleResp(index, row) {
-      console.log("[FindIssue]handleResp...", index, row);
+      console.log("[AllIssue]handleResp...", index, row);
       this.dialogRespOpen = true;
       this.$nextTick(() => {
           this.$refs.issueRespDialogRef.init(row, "add");
       })
     },
     async handleSearch() {
-      console.log("[FindIssue]handleSearch...");
+      console.log("[AllIssue]handleSearch...");
+      if(window.sessionStorage.getItem('type') =="0"){//普通用户
+        this.isAdmin=false;
+      }
+      else if(window.sessionStorage.getItem('type') =="1"){//管理员
+        this.isAdmin=true;
+      }
       const result = await this.$http.get("/req/query", {
           params:this.query,
       });
       if (result.data.status.code == 200) {
         this.issues = result.data.issues;
-        console.log("[FindIssue]handleSearch success");
+        console.log("[AllIssue]handleSearch success");
         this.$message({
           message: "查询成功",
           type: "success",
@@ -308,6 +325,29 @@ export default defineComponent({
         });
       }
     },
+    async handleLookUser(index,row){
+      console.log("[AllIssue]handleLookUser ...")
+      // console.log(row)
+      const result = await this.$http.get("user/info",{
+        params:{
+          username:row.username,
+        }
+      });
+      if (result.data.status.code == 200) {
+        console.log("[AllIssue]handleLookUser success");
+        let userInfo = result.data;
+        userInfo.password="";
+        this.userInfoOpen=true;
+        this.$nextTick(()=>{
+            this.$refs.userInfoRef1.init(userInfo,"look")
+        })
+      } else {
+        this.$message({
+          message: "获取用户信息失败:" + result.data.status.msg,
+          type: "error",
+        });
+      }
+    }
   },
   computed: {
     timeFormat() {

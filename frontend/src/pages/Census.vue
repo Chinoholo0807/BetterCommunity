@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-20 13:41:38
  * @LastEditors: l
- * @LastEditTime: 2021-11-20 15:51:15
+ * @LastEditTime: 2021-11-20 19:00:05
  * @FilePath: \frontend\src\pages\Census.vue
 -->
 <template>
@@ -68,6 +68,34 @@
             >
           </el-col>
         </el-row>
+        <!-- data表格 -->
+        <el-table
+            :data="tableDatas"
+             v-if="dataReady"
+             height="400"
+            style="width: 90%">
+            <el-table-column
+                prop="date"
+                label="时间"
+                sortable
+                >
+            </el-table-column>
+             <el-table-column
+                prop="count"
+                label="累计成交单数"
+                sortable
+                >
+            </el-table-column>
+             <el-table-column
+                prop="totalFee"
+                label="总计中介费"
+                sortable
+                >
+            </el-table-column>
+        </el-table>
+        <el-row >
+           
+        </el-row>
         <!-- 折线图1 总交易数-->
         <el-row>
           <div class="canvas-wrapper">
@@ -79,7 +107,7 @@
             ></schart>
           </div>
         </el-row>
-
+        <!-- 折线图2 总中介费用 -->
          <el-row>
           <div class="canvas-wrapper">
            <schart 
@@ -150,6 +178,7 @@ export default defineComponent({
           }]
       },
       dataReady:false,
+      tableDatas:[],
     };
   },
   methods: {
@@ -182,11 +211,18 @@ export default defineComponent({
             let datas = result.data.datas;
             this.optionsCount.datasets[0].data = [];
             this.optionsFee.datasets[0].data = [];
+            this.tableDatas = []
             let i=0;
             for(i=0;i<datas.length;i++){
-                tmpLabel.push(datas[i].year.toString()+"."+datas[i].month.toString())
+                let date = datas[i].year.toString()+"."+datas[i].month.toString()
+                tmpLabel.push(date)
                 this.optionsCount.datasets[0].data.push(datas[i].count)
                 this.optionsFee.datasets[0].data.push(datas[i].totalFee)
+                this.tableDatas.push({
+                    "date": date,
+                    "count":datas[i].count,
+                    "totalFee": datas[i].totalFee
+                })
             }
             this.optionsCount.labels = tmpLabel;
             this.optionsFee.labels = tmpLabel;

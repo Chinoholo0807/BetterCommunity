@@ -3,12 +3,12 @@
  * @Author: l
  * @Date: 2021-11-13 17:40:06
  * @LastEditors: l
- * @LastEditTime: 2021-11-13 20:19:34
- * @FilePath: \frontend\src\pages\UpdateUserDialog.vue
+ * @LastEditTime: 2021-11-20 19:55:46
+ * @FilePath: \frontend\src\dialog\UserInfoDialog.vue
 -->
 <template>
   <el-dialog
-    title="修改用户信息"
+    title="用户基本信息"
     :visible.sync="dialogVisible"
     width="50%"
     append-to-body
@@ -25,12 +25,12 @@
       <el-form-item label="用户名" prop="username">
         <el-input v-model="userInfoForm.username" :disabled="true"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password">
+      <el-form-item label="密码" prop="password" v-if="!readOnly">
         <el-input
           v-model="userInfoForm.password"
           placeholder="请输入密码"
           show-password
-          
+          :disabled="readOnly"
         ></el-input>
       </el-form-item>
       <el-form-item label="用户姓名" prop="name">
@@ -53,7 +53,7 @@
       </el-form-item>
 
       <el-form-item label="手机号码" prop="phoneNum">
-        <el-input v-model="userInfoForm.phoneNum"></el-input>
+        <el-input v-model="userInfoForm.phoneNum" :disabled="readOnly"></el-input>
       </el-form-item>
 
       <el-form-item label="注册城市" prop="selectOptions">
@@ -70,13 +70,14 @@
           type="textarea"
           rows="3"
           v-model="userInfoForm.introduction"
+          :disabled="readOnly"
         ></el-input>
       </el-form-item>
     </el-form>
 
     <div slot="footer">
-      <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="tryUpdate()">确 定</el-button>
+      <el-button @click="dialogVisible = false">取消</el-button>
+      <el-button type="primary" @click="tryUpdate()" v-if="type == 'edit'">更新</el-button>
     </div>
   </el-dialog>
 </template>
@@ -119,6 +120,8 @@ export default defineComponent({
           },
         ],
       },
+      type:"",
+      readOnly:true,
     };
   },
   methods: {
@@ -126,8 +129,13 @@ export default defineComponent({
       // console.log('dialogBeforeClose')
       this.dialogVisible = false;
     },
-    init(userInfo) {
-      this.userInfoForm =Object.assign({},userInfo)
+    init(userInfo,type) {
+      this.type = type;
+      if(type == "edit")
+        this.readOnly = false;
+      else
+        this.readOnly = true;
+      this.userInfoForm =Object.assign({},userInfo);
       this.dialogVisible = true;
     },
     tryUpdate() {

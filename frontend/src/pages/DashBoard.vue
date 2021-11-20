@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-11 17:00:10
  * @LastEditors: l
- * @LastEditTime: 2021-11-18 16:51:27
+ * @LastEditTime: 2021-11-20 19:44:05
  * @FilePath: \frontend\src\pages\Dashboard.vue
 -->
 <template>
@@ -133,15 +133,15 @@
         </el-descriptions>
       </el-col>
     </el-row>
-    <update-user-dialog v-if="dialogOpen" ref="updateUserDialogRef" />
+    <user-info-dialog v-if="dialogOpen" ref="userInfoDialogRef" />
   </div>
 </template>
 
 <script>
 import { defineComponent } from "@vue/composition-api";
-import UpdateUserDialog from '@/dialog/UpdateUserDialog'
+import UserInfoDialog from '@/dialog/UserInfoDialog'
 export default defineComponent({
-  components: { UpdateUserDialog },
+  components: { UserInfoDialog},
   created() {
     this.getUserInfo();
   },
@@ -154,7 +154,11 @@ export default defineComponent({
   methods: {
     async getUserInfo() {
       console.log("getUserInfo...");
-      const result = await this.$http.get("user/info");
+      const result = await this.$http.get("user/info",{
+        params:{
+          username:"",
+        }
+      });
       // console.log(result.data)
       if (result.data.status.code == 200) {
         this.userInfo = result.data;
@@ -177,7 +181,7 @@ export default defineComponent({
         this.dialogOpen = true
         this.userInfo.password = ''
         this.$nextTick(()=>{
-            this.$refs.updateUserDialogRef.init(this.userInfo)
+            this.$refs.userInfoDialogRef.init(this.userInfo,"edit")
         })
     }
   },

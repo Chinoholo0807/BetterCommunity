@@ -3,16 +3,14 @@
  * @Author: l
  * @Date: 2021-11-08 10:13:44
  * @LastEditors: l
- * @LastEditTime: 2021-11-20 13:43:20
+ * @LastEditTime: 2021-11-20 19:15:28
  * @FilePath: \frontend\src\pages\Home.vue
 -->
 <template>
   <el-container class="home-container">
     <!-- 头部 -->
     <el-header>
-      <div class="logo">
-        好社区系统
-      </div>
+      <div class="logo">好社区系统</div>
     </el-header>
 
     <!-- 页面主体 -->
@@ -69,52 +67,14 @@
 import { defineComponent } from "@vue/composition-api";
 
 export default defineComponent({
+  created() {
+    this.getUserInfo();
+  },
   setup() {},
   name: "Home",
   data: function () {
     return {
-      items: [
-        {
-          title: "我的信息",
-          index: "/dashboard",
-          icon: "el-icon-info",
-        },
-        {
-          title: "劳您驾",
-          index: "1",
-          icon: "el-icon-truck",
-          subs: [
-            {
-              title: "我的委托",
-              index: "/myissue",
-            },
-            {
-              title:"所有委托",
-              index: "/allissue",
-            }
-          ],
-        },
-        {
-          title: "我可以",
-          index: "/myrecv",
-          icon: "el-icon-thumb",
-          subs: [
-            {
-              title: "发现委托",
-              index: "/findissue",
-            },
-            {
-              title: "我的响应",
-              index: "/myresp",
-            },
-          ],
-        },
-        {
-          title: "统计数据",
-          index: "/census",
-          icon: "el-icon-pie-chart",
-        },
-      ],
+      items: [],
     };
   },
   methods: {
@@ -123,6 +83,92 @@ export default defineComponent({
     },
     handleClose(key, keyPath) {
       // console.log(key, keyPath);
+    },
+    async getUserInfo() {
+      console.log("getUserInfo...");
+      const result = await this.$http.get("user/info");
+      // console.log(result.data)
+      if (result.data.status.code == 200) {
+        this.userInfo = result.data;
+        // 利用sessionStorage存储用户信息
+        window.sessionStorage.setItem("username", result.data.username);
+        window.sessionStorage.setItem("name", result.data.name);
+        window.sessionStorage.setItem("type", result.data.type);
+        window.sessionStorage.setItem("userLevel", result.data.userLevel);
+        window.sessionStorage.setItem("regCity", result.data.regCity);
+        window.sessionStorage.setItem("regCommunity", result.data.regCommunity);
+        console.log("getUserInfo success");
+        //普通用户
+        if (result.data.type == 0) {
+          this.items = [
+            {
+              title: "我的信息",
+              index: "/dashboard",
+              icon: "el-icon-info",
+            },
+            {
+              title: "劳您驾",
+              index: "1",
+              icon: "el-icon-truck",
+              subs: [
+                {
+                  title: "我的委托",
+                  index: "/myissue",
+                },
+                {
+                  title: "所有委托",
+                  index: "/allissue",
+                },
+              ],
+            },
+            {
+              title: "我可以",
+              index: "/myrecv",
+              icon: "el-icon-thumb",
+              subs: [
+                {
+                  title: "发现委托",
+                  index: "/findissue",
+                },
+                {
+                  title: "我的响应",
+                  index: "/myresp",
+                },
+              ],
+            },
+          ];
+        }
+        //管理员用户
+        else if (result.data.type == 1) {
+          this.items = [
+            {
+              title: "我的信息",
+              index: "/dashboard",
+              icon: "el-icon-info",
+            },
+            {
+              title: "所有委托",
+              index: "/allissue",
+              icon: "el-icon-truck",
+            },
+            {
+              title: "所有响应",
+              index: "/myresp",
+              icon: "el-icon-thumb",
+            },
+            {
+              title: "统计数据",
+              index: "/census",
+              icon: "el-icon-pie-chart",
+            },
+          ];
+        }
+      } else {
+        this.$message({
+          message: "获取用户信息失败:" + result.data.status.msg,
+          type: "error",
+        });
+      }
     },
   },
 });
@@ -154,10 +200,10 @@ export default defineComponent({
   background-color: #dce4ec;
 }
 .logo {
-    /* float: left; */
-    width: 250px;
-    line-height: 60px;
-    font-size: 25px;
-    color:white;
+  /* float: left; */
+  width: 250px;
+  line-height: 60px;
+  font-size: 25px;
+  color: white;
 }
 </style>
