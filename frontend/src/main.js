@@ -1,28 +1,27 @@
 /*
  * @Description: 
  * @Author: l
- * @Date: 2021-05-31 13:38:16
+ * @Date: 2021-11-07 23:25:09
  * @LastEditors: l
- * @LastEditTime: 2021-11-17 00:11:54
+ * @LastEditTime: 2021-11-20 13:31:55
  * @FilePath: \frontend\src\main.js
  */
+
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import store from './store'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 
 
 axios.defaults.baseURL = 'http://127.0.0.1:5000/'
-// axios.defaults.baseURL = 'http://10.128.205.146:1234/'
+// axios.defaults.baseURL = 'http://10.128.203.95:1234/'
 axios.interceptors.request.use(config=>{
   config.headers.common['Authorization'] = window.sessionStorage.getItem('token')
-  // config.headers.accessToken = window.sessionStorage.getItem('token')
-  // config.auth= window.sessionStorage.getItem('token')
+  // console.log(config)
   return config
 })
 Vue.prototype.$http = axios
@@ -49,7 +48,6 @@ Date.prototype.Format = function (fmt) {undefined
 new Vue({
   el: '#app',
   router,
-  store,
   components: { App },
   template: '<App/>'
 })

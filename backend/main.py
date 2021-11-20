@@ -377,6 +377,45 @@ def deal_req_reply():
         'code': 200,
         'msg': 'OK',
     }})
+
+@app.route('/census/query',methods=['GET'])
+def deal_census_query():
+    print(request.path, " : ", request.args)
+    return jsonify({'status': {
+        'code': 200,
+        'msg': 'OK',
+    },"datas":[{
+        'year':2020,
+        'month':1,
+        'count':2,
+        'totalFee':3.5,
+    },{
+        'year':2020,
+        'month':2,
+        'count':3,
+        'totalFee':4.5,
+    },{
+        'year':2020,
+        'month':3,
+        'count':23,
+        'totalFee':3.5,
+    },{
+        'year':2020,
+        'month':4,
+        'count':5,
+        'totalFee':5.5,
+    },{
+        'year':2020,
+        'month':5,
+        'count':6,
+        'totalFee':8.5,
+    },{
+        'year':2020,
+        'month':6,
+        'count':11,
+        'totalFee':7.5,
+    }]
+    })
 if __name__ == '__main__':
     app.run(port=5000)
                 

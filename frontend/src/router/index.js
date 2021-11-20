@@ -16,6 +16,8 @@ import FindIssue from '@/pages/FindIssue'
 import MyIssue from '@/pages/MyIssue'
 import MyResp from '@/pages/MyResp'
 import Register from '@/pages/Register'
+import AllIssue from '@/pages/AllIssue'
+import Census from '@/pages/Census'
 Vue.use(Router) // 让Vue安装VueRouter组件
 
 //指定路由
@@ -53,6 +55,14 @@ const router = new Router({
         path: '/myresp',
         name: 'myresp',
         component: MyResp
+      },{
+        path:"/allissue",
+        name:"allissue",
+        component:AllIssue,
+      },{
+        path:"/census",
+        name:"census",
+        component:Census,
       }]
     }
   ]

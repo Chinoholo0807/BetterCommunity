@@ -3,8 +3,8 @@
  * @Author: l
  * @Date: 2021-11-11 17:00:10
  * @LastEditors: l
- * @LastEditTime: 2021-11-20 13:32:33
- * @FilePath: \frontend\src\pages\FindIssue.vue
+ * @LastEditTime: 2021-11-20 13:39:32
+ * @FilePath: \frontend\src\pages\AllIssue.vue
 -->
 <template>
   <div class="container">
@@ -194,14 +194,6 @@
                 @click="handleLook(scope.$index, scope.row)"
                 >查看
               </el-button>
-
-              <el-button
-                type="text"
-                icon="el-icon-help"
-                @click="handleResp(scope.$index, scope.row)"
-                v-if="scope.row.state == 0"
-                >响应
-              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -229,7 +221,7 @@ export default defineComponent({
       dialogRespOpen: false,
       query: {
         title: "",
-        regCommunity: window.sessionStorage.getItem('regCommunity'),
+        regCommunity: "",
         type: 5,
         id : "",
       },

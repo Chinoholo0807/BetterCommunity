@@ -3,13 +3,17 @@
  * @Author: l
  * @Date: 2021-11-08 10:13:44
  * @LastEditors: l
- * @LastEditTime: 2021-11-18 00:21:43
+ * @LastEditTime: 2021-11-20 13:43:20
  * @FilePath: \frontend\src\pages\Home.vue
 -->
 <template>
   <el-container class="home-container">
     <!-- 头部 -->
-    <el-header>Header </el-header>
+    <el-header>
+      <div class="logo">
+        好社区系统
+      </div>
+    </el-header>
 
     <!-- 页面主体 -->
     <el-container>
@@ -84,6 +88,10 @@ export default defineComponent({
               title: "我的委托",
               index: "/myissue",
             },
+            {
+              title:"所有委托",
+              index: "/allissue",
+            }
           ],
         },
         {
@@ -103,7 +111,7 @@ export default defineComponent({
         },
         {
           title: "统计数据",
-          index: "/e",
+          index: "/census",
           icon: "el-icon-pie-chart",
         },
       ],
@@ -144,5 +152,12 @@ export default defineComponent({
   bottom: 0;
   overflow-y: scroll;
   background-color: #dce4ec;
+}
+.logo {
+    /* float: left; */
+    width: 250px;
+    line-height: 60px;
+    font-size: 25px;
+    color:white;
 }
 </style>

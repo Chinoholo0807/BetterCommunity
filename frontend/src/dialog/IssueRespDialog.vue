@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-18 00:45:25
  * @LastEditors: l
- * @LastEditTime: 2021-11-18 15:10:37
+ * @LastEditTime: 2021-11-18 20:11:04
  * @FilePath: \frontend\src\dialog\IssueRespDialog.vue
 -->
 <template>
@@ -130,7 +130,7 @@ export default defineComponent({
     init(row , type) {
       if(type == "look"){
         this.respForm = {
-          requestId : row.requesetId,
+          requestId : row.requestId,
           description : row.description,
         }
         this.readOnly = true;
