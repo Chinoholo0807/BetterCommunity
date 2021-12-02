@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-18 00:45:25
  * @LastEditors: l
- * @LastEditTime: 2021-11-18 20:11:04
+ * @LastEditTime: 2021-11-21 15:52:55
  * @FilePath: \frontend\src\dialog\IssueRespDialog.vue
 -->
 <template>
@@ -62,10 +62,10 @@ export default defineComponent({
       this.$refs.respFormRef.validate(async (valid) => {
         if (valid) {
           console.log("[IssueRespDialog]tryRespIssue ...");
-          this.respForm.createTime = parseInt(new Date().getTime() / 1000);
+          this.respForm.createTime = parseInt(new Date().getTime() );
           const result = await this.$http.post("resp/accept", 
           {
-            requesetId:this.respForm.requestId,
+            requestId:this.respForm.requestId,
             createTime:this.respForm.createTime,
             description:this.respForm.description,
           });
@@ -77,6 +77,7 @@ export default defineComponent({
             });
 
             this.dialogVisible = false;
+            this.$parent.reload();
           } else {
             // 响应issue失败
             this.$message({
@@ -97,7 +98,7 @@ export default defineComponent({
       this.$refs.respFormRef.validate(async (valid)=>{
         if(valid){
           console.log("[IssueRespDialog]tryUpdateResp ...");
-          this.respForm.updateTime = parseInt(new Date().getTime() / 1000);
+          this.respForm.updateTime = parseInt(new Date().getTime());
           const result = await this.$http.post("resp/update", {
             id:this.respForm.id,
             description:this.respForm.description,

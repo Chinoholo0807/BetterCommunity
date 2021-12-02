@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-11 17:00:10
  * @LastEditors: l
- * @LastEditTime: 2021-11-18 17:17:12
+ * @LastEditTime: 2021-11-21 15:46:29
  * @FilePath: \frontend\src\pages\MyIssue.vue
 -->
 <template>
@@ -29,7 +29,6 @@
           style="width: 100%"
           stripe
           v-if="isRouterAlive"
-          :row-class-name="tableRowClassName"
         >
           <el-table-column
             prop="id"
@@ -168,6 +167,13 @@
 
               <el-button
                 type="text"
+                icon="el-icon-finished"
+                @click="handleConfirm(scope.$index, scope.row)"
+                v-if="scope.row.state == 2"
+                >确认完成
+              </el-button>
+              <el-button
+                type="text"
                 icon="el-icon-bell"
                 @click="handleResp(scope.$index, scope.row)"
                 v-if="scope.row.state != 1"
@@ -185,7 +191,10 @@
         </el-table>
       </el-col>
     </el-row>
-	<issue-resp-list-dialog v-if="dialogListOpen" ref="issueRespListDialogRef"/>
+    <issue-resp-list-dialog
+      v-if="dialogListOpen"
+      ref="issueRespListDialogRef"
+    />
     <detail-issue-dialog v-if="dialogIssueOpen" ref="detailIssueDialogRef" />
   </div>
 </template>
@@ -193,9 +202,9 @@
 <script>
 import { defineComponent } from "@vue/composition-api";
 import DetailIssueDialog from "@/dialog/DetailIssueDialog";
-import IssueRespListDialog from '@/dialog/IssueRespListDialog'
+import IssueRespListDialog from "@/dialog/IssueRespListDialog";
 export default defineComponent({
-  components: { DetailIssueDialog , IssueRespListDialog },
+  components: { DetailIssueDialog, IssueRespListDialog },
   created() {
     this.getIssues();
   },
@@ -204,7 +213,7 @@ export default defineComponent({
       issues: [],
       isRouterAlive: true,
       dialogIssueOpen: false,
-	  dialogListOpen: false,
+      dialogListOpen: false,
     };
   },
   methods: {
@@ -223,6 +232,7 @@ export default defineComponent({
         });
       }
     },
+    // 重新加载页面，会重新请求获取issues
     reload() {
       console.log("[MyIssue]reload ...");
       this.isRouterAlive = false;
@@ -230,21 +240,6 @@ export default defineComponent({
       this.$nextTick(() => {
         this.isRouterAlive = true;
       });
-    },
-    tableRowClassName({ row, rowIndex }) {
-      if (row.state == 0)
-        //待响应
-        return "need-resp-row";
-      else if (row.state == 1)
-        //已取消
-        return "cancel-row";
-      else if (row.state == 2)
-        //被响应未完成
-        return "process-row";
-      else if (row.state == 3)
-        //已完成
-        return "finish-row";
-      return "nil-row";
     },
     handleEdit(index, row) {
       console.log("[MyIssue]handleEdit...", index, row);
@@ -293,41 +288,66 @@ export default defineComponent({
         title: "",
         description: "",
         headcount: 1,
-        createTime: parseInt(new Date().getTime() / 1000),
-        endTime: parseInt(new Date().getTime() / 1000),
+        createTime: parseInt(new Date().getTime()),
+        endTime: parseInt(new Date().getTime()),
         commissionFee: 0.0,
       };
       this.$nextTick(() => {
         this.$refs.detailIssueDialogRef.init(tmpIssue, "add");
       });
     },
-    async handleResp(index, row){
+    handleConfirm(index ,row) {
+      console.log("[MyIssue]handleConfirm...", index, row);
+      this.$confirm("确定这个请求帮忙完成了吗？")
+        .then(async (_) => {
+          //确认完成请求
+          const result = await this.$http.post("req/confirm", { requestId: row.id });
+          if (result.data.status.code == 200) {
+            this.$message({
+              message: "操作成功",
+              type: "success",
+            });
+            this.reload();
+          } else {
+            this.$message({
+              message: "操作失败:" + result.data.status.msg,
+              type: "error",
+            });
+          }
+        })
+        .catch((_) => {
+          //取消，无事发生
+        });
+    },
+    async handleResp(index, row) {
       console.log("[MyIssue]handleResp...", index, row);
-      const result = await this.$http.get("resp/query",{
-        requestId:row.id,
-        id:"",
+      const result = await this.$http.get("resp/query", {
+        params: {
+          requestId: row.id,
+          id: "",
+        },
       });
       if (result.data.status.code == 200) {
         console.log("[MyIssue]handleResp success");
         //获取响应成功
-		this.dialogListOpen = true;
-		// console.log(result.data.resps)
-		this.$nextTick(() =>{
-			this.$refs.issueRespListDialogRef.init(result.data.resps,"")
-		})
+        this.dialogListOpen = true;
+        // console.log(result.data.resps)
+        this.$nextTick(() => {
+          this.$refs.issueRespListDialogRef.init(result.data.resps, "");
+        });
       } else {
         this.$message({
-          	message: "获取响应信息失败:" + result.data.status.msg,
-          	type: "error",
+          message: "获取响应信息失败:" + result.data.status.msg,
+          type: "error",
         });
-    	}
-	}
+      }
+    },
   },
   computed: {
     timeFormat() {
       return function (ts) {
         if (!ts) return "";
-        let date = new Date(ts * 1000);
+        let date = new Date(ts);
         return date.Format("yyyy-MM-dd HH:mm:ss");
       };
     },

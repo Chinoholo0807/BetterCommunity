@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
+
 
 app = Flask(__name__)
-from flask_cors import CORS
+
 
 CORS(app, resources=r'/*')
 
@@ -171,6 +173,14 @@ def deal_req_mine():
 
 @app.route('/req/delete',methods=['POST'])
 def deal_req_delete():
+    params = request.get_json(force=True)
+    print(request.path, " : ", params)
+    return jsonify({'status': {
+        'code': 200,
+        'msg': 'OK',
+    }})
+@app.route('/req/confirm',methods=['POST'])
+def deal_req_confirm():
     params = request.get_json(force=True)
     print(request.path, " : ", params)
     return jsonify({'status': {

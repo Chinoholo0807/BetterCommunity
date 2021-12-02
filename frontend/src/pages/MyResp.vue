@@ -264,7 +264,7 @@ export default defineComponent({
     timeFormat() {
       return function (ts) {
         if (!ts) return "";
-        let date = new Date(ts * 1000);
+        let date = new Date(ts );
         return date.Format("yyyy-MM-dd HH:mm:ss");
       };
     },

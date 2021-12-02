@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-18 16:59:21
  * @LastEditors: l
- * @LastEditTime: 2021-11-18 18:27:39
+ * @LastEditTime: 2021-11-21 15:49:52
  * @FilePath: \frontend\src\dialog\IssueRespListDialog.vue
 -->
 <!--
@@ -152,8 +152,8 @@ export default defineComponent({
           message: "操作成功",
           type: "success",
         });
-
         this.dialogVisible = false;
+        this.$parent.reload();
       } else {
         // 响应issue失败
         this.$message({
@@ -167,7 +167,7 @@ export default defineComponent({
     timeFormat() {
       return function (ts) {
         if (!ts) return "";
-        let date = new Date(ts * 1000);
+        let date = new Date(ts);
         return date.Format("yyyy-MM-dd HH:mm:ss");
       };
     },

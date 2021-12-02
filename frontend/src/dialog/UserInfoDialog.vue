@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-13 17:40:06
  * @LastEditors: l
- * @LastEditTime: 2021-11-20 19:55:46
+ * @LastEditTime: 2021-11-20 23:34:48
  * @FilePath: \frontend\src\dialog\UserInfoDialog.vue
 -->
 <template>
@@ -147,6 +147,7 @@ export default defineComponent({
             password: this.userInfoForm.password,
             phoneNum: this.userInfoForm.phoneNum,
             introduction: this.userInfoForm.introduction,
+            updateTime: parseInt(new Date().getTime() ),
           });
           if (result.data.status.code == 200) {
             // 修改信息成功

@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-11 17:00:10
  * @LastEditors: l
- * @LastEditTime: 2021-11-20 13:32:33
+ * @LastEditTime: 2021-11-21 15:54:39
  * @FilePath: \frontend\src\pages\FindIssue.vue
 -->
 <template>
@@ -237,12 +237,12 @@ export default defineComponent({
   },
   methods: {
     async getIssues() {
-      console.log("[MyIssue]getIssues...");
+      console.log("[FindIssue]getIssues...");
       const result = await this.$http.get("req/mine");
       //   console.log(result.data);
       if (result.data.status.code == 200) {
         this.issues = result.data.issues;
-        console.log("[MyIssue]getIssues success");
+        console.log("[FindIssue]getIssues success");
         // this.reload();
       } else {
         this.$message({
@@ -321,7 +321,7 @@ export default defineComponent({
     timeFormat() {
       return function (ts) {
         if (!ts) return "";
-        let date = new Date(ts * 1000);
+        let date = new Date(ts );
         return date.Format("yyyy-MM-dd HH:mm:ss");
       };
     },

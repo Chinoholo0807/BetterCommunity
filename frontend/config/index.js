@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-05-31 13:38:16
  * @LastEditors: l
- * @LastEditTime: 2021-11-17 23:52:52
+ * @LastEditTime: 2021-11-21 15:35:43
  * @FilePath: \frontend\config\index.js
  */
 'use strict'
@@ -36,6 +36,7 @@ module.exports = {
     host: 'localhost', // can be overwritten by process.env.HOST
     // host: '10.128.208.213',
     // host:'192.168.43.150',
+    // host: '10.128.249.18',
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

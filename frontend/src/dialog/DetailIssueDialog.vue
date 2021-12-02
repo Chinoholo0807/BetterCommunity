@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-13 17:40:06
  * @LastEditors: l
- * @LastEditTime: 2021-11-14 21:01:24
+ * @LastEditTime: 2021-11-21 15:48:43
  * @FilePath: \frontend\src\dialog\DetailIssueDialog.vue
 -->
 <template>
@@ -113,7 +113,7 @@ export default defineComponent({
   },
   watch:{
       endTimeStr(newStr,oldStr){
-          this.issue.endTime = new Date(newStr).getTime()/1000
+          this.issue.endTime = new Date(newStr).getTime()
       }
   },
   methods: {
@@ -127,7 +127,7 @@ export default defineComponent({
         this.readOnly=false
       this.issue = Object.assign({}, issue);
       this.dialogType = dialogType;
-      this.endTimeStr = new Date(this.issue.endTime*1000);
+      this.endTimeStr = new Date(this.issue.endTime);
       this.dialogVisible = true;
     },
     tryUpdateIssue() {
@@ -143,6 +143,7 @@ export default defineComponent({
               type: "success",
             });
             this.dialogVisible = false;
+            this.$parent.reload();
           } else {
             // 修改issue失败
             this.$message({
