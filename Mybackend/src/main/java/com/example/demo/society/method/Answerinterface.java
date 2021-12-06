@@ -72,4 +72,11 @@ public interface Answerinterface extends JpaRepository<Answer, Integer> {
             "where p.create_time= ?1", nativeQuery = true)
     public Integer findIdByCreateTime(Timestamp create_time);
 
+
+    @Transactional
+    @Query(value = "select id " +
+            "from responses p " +
+            "where request_id= ?1", nativeQuery = true)
+    public List<Integer> findIdByRequestId(Integer id);
+
 }

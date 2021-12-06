@@ -286,8 +286,17 @@ public class Requesthandler {
                 return r_reply;
             }
             try {
-                if(input.operate.equals(0))
+                if(input.operate.equals(0)) {
                     requestinterface.modifyStateById(input.requestId, 2);
+
+                    List<Integer>  ret = answerinterface.findIdByRequestId(input.requestId);
+
+                    for(Integer i : ret){                         //拒绝掉所有的res
+                        response_state = answerinterface.findStateById(i);
+                        if(response_state == 0)
+                            answerinterface.modifyStateById(i,2);
+                    }
+                }
                 answerinterface.modifyStateById(input.responseId, input.operate+1);
                 r_reply.status.code = 200;
                 r_reply.status.msg = "成功";
