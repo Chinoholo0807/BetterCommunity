@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-05-31 13:38:16
  * @LastEditors: l
- * @LastEditTime: 2021-11-21 15:35:43
+ * @LastEditTime: 2021-12-24 21:20:04
  * @FilePath: \frontend\config\index.js
  */
 'use strict'
@@ -21,8 +21,8 @@ module.exports = {
     // headers:{'Access-Control-Allow-Origin':'*'},
     proxyTable: {
       '/api': {
-        target: 'http://127.0.0.1:5000', //mine
-        // target:'http://10.28.247.102:5000',  local
+        // target: 'http://127.0.0.1:5000', //mine
+        target:'http://10.29.252.22:5000',  //local
         // target:'http://10.28.247.102:5000', //cck
         // target:'http://192.168.43.188:5000',
         // target:'http://10.28.198.140:5000', //llm
@@ -32,9 +32,11 @@ module.exports = {
         }
       }
     },
+    
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
-    // host: '10.128.208.213',
+    // host: 'localhost', // can be overwritten by process.env.HOST
+    // host: '10.29.252.22',
+    host:'10.28.170.94',
     // host:'192.168.43.150',
     // host: '10.128.249.18',
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined

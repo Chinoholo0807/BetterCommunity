@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-11 17:00:10
  * @LastEditors: l
- * @LastEditTime: 2021-11-21 15:54:39
+ * @LastEditTime: 2021-12-26 14:03:35
  * @FilePath: \frontend\src\pages\FindIssue.vue
 -->
 <template>
@@ -238,7 +238,14 @@ export default defineComponent({
   methods: {
     async getIssues() {
       console.log("[FindIssue]getIssues...");
-      const result = await this.$http.get("req/mine");
+      const result = await this.$http.get("req/query",{
+        params:{
+          title:"",
+          regCommunity: window.sessionStorage.getItem('regCommunity'),
+          type: 5,
+          id : "",
+        }
+      });
       //   console.log(result.data);
       if (result.data.status.code == 200) {
         this.issues = result.data.issues;

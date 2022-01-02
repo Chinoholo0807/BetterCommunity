@@ -3,7 +3,7 @@
  * @Author: l
  * @Date: 2021-11-07 23:25:09
  * @LastEditors: l
- * @LastEditTime: 2021-11-21 15:35:09
+ * @LastEditTime: 2021-12-25 19:42:20
  * @FilePath: \frontend\src\main.js
  */
 
@@ -17,8 +17,10 @@ import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 
 
-axios.defaults.baseURL = 'http://127.0.0.1:5000/'
+// axios.defaults.baseURL = 'http://127.0.0.1:5000/'
 // axios.defaults.baseURL = 'http://10.128.203.95:1234/'
+// axios.defaults.baseURL = 'http://10.128.198.12:1234/'
+axios.defaults.baseURL = 'http://10.128.254.25:1234/'
 axios.interceptors.request.use(config=>{
   config.headers.common['Authorization'] = window.sessionStorage.getItem('token')
   // console.log(config)
